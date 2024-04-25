@@ -1,8 +1,6 @@
 package org.example;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.example.models.Carta;
 import org.example.models.Colecao;
@@ -37,5 +35,21 @@ public class MyResource {
         cartas.add(new Carta(2, "Ornn", "Deus forja", 1000000));
         cartas.add(new Carta(3, "Levi", "Aprendendo Java",15000));
         return new Colecao(1,"cartas-1", cartas);
+    }
+
+    @POST
+    @Path("colecao-de-cartas")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void postColecao(Carta carta){
+        System.out.println(carta.toString());
+    }
+
+    @PUT
+    @Path("colecao-de-cartas")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Carta updateColecao(Carta carta){
+        return carta;
     }
 }
