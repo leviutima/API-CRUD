@@ -1,4 +1,6 @@
-ckage org.example.models.Repository;
+package org.example.models.Repository;
+
+
 
 import org.example.models.Modal.Carta;
 
@@ -58,7 +60,17 @@ public class ColecaoRepository {
     }
 
     public void createCarta (Carta carta) {
-        
+        try {
+            var conn = DriverManager.getConnection(URL, USER, PASSWORD);
+            var stat = conn.prepareStatement("INSERT INTO COLECAO(ID, NOME, DESCRICAO, PRECO) VALUES (?,?,?,?)");
+            stat.setInt(1,carta.getId());
+            stat.setString(2,carta.getNome());
+            stat.setString(3,carta.getDescricao());
+            stat.setDouble(4, carta.getPreco());
+            stat.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
