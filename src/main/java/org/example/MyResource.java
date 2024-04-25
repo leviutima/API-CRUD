@@ -2,6 +2,7 @@ package org.example;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.example.models.Carta;
 import org.example.models.Colecao;
 
@@ -46,10 +47,16 @@ public class MyResource {
     }
 
     @PUT
-    @Path("colecao-de-cartas")
+    @Path("colecao-de-cartas/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Carta updateColecao(Carta carta){
+    public Carta updateColecao(@PathParam("id")int id, Carta carta){
         return carta;
+    }
+
+    @DELETE
+    @Path("colecao-de-cartas/{id}")
+    public Response deleteCarta (@PathParam("id")int id){
+        return Response.status(201).build();
     }
 }
