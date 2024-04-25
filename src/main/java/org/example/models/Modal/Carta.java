@@ -1,4 +1,4 @@
-package org.example.models;
+package org.example.models.Modal;
 
 public class Carta {
     private int id;
