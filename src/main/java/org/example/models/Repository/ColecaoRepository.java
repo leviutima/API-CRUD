@@ -3,15 +3,21 @@ package org.example.models.Repository;
 
 
 import org.example.models.Modal.Carta;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ColecaoRepository {
 
-    List<Carta> cartas = new ArrayList<>();
+
+    private static final Logger logger = LogManager.getLogger(ColecaoRepository.class);
+
+    public static List<Carta> cartas = new ArrayList<>();
 
     public static final String URL = "jdbc:oracle:thin:@oracle.fiap.com.br:1521:ORCL";
     public static final String USER = "rm553580";
@@ -73,4 +79,38 @@ public class ColecaoRepository {
         }
     }
 
+    public void updateCarta(Carta carta) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            String sql = "UPDATE COLECAO SET NOME = ?, DESCRICAO = ?, PRECO = ? WHERE ID = ?";
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setString(1, carta.getNome());
+                statement.setString(2, carta.getDescricao());
+                statement.setDouble(3, carta.getPreco());
+                statement.setInt(4, carta.getId());
+
+                int rowsUpdated = statement.executeUpdate();
+                if (rowsUpdated == 0) {
+                    throw new RuntimeException("A carta com o ID " + carta.getId() + " não foi encontrada");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao atualizar carta", e);
+        }
+    }
+
+    public void deleteCarta(int id) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            String sql = "DELETE FROM COLECAO WHERE ID = ?";
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                statement.setInt(1, id);
+                int delete = statement.executeUpdate();
+                if (delete == 0) {
+                    throw new RuntimeException("A carta com o ID " + id + " não foi encontrada");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao excluir carta", e);
+        }
+    }
 }
+
